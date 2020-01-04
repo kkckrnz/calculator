@@ -1,5 +1,6 @@
 // Variables
-let displayValue = '';
+let displayValue = '0';
+display();
 let operatorIndices;
 let operators;
 
@@ -75,17 +76,40 @@ function buttonClicked() {
     switch (this.value) {
         case 'clear':
             console.log('clear clicked')
-            displayValue = '';
+            displayValue = '0';
             return display();
         case '=':
             console.log('= clicked');
             return compute();
         default:
             console.log('number and symbols clicked' + this.value);
-            displayValue += this.value;
+
+            if (displayValue === '0') {
+                if (this.value === '.') {
+                    displayValue += this.value;
+                } else {
+                    displayValue = this.value;
+                }
+            } else {
+                displayValue += this.value;
+            }
+
             return display();
     }
 }
+
+function isMoreThanOneDot(num) {
+    let dotCount = 0;
+    for (i = 0; i < num.length; i++) {
+        if (num[i] === '.') {
+            dotCount += 1;
+        }
+    }
+    if (dotCount > 1) {
+        return true;
+    }
+}
+
 
 function isValidEquation() {
 
@@ -98,13 +122,22 @@ function isValidEquation() {
         return false;
     }
 
+    // function isDoubleDots() {
+    //     for (i = 0; i < displayValue.length - 1; i++) {
+    //         if (displayValue[i] === '.' && displayValue[i+1] === '.')
+    //     }
+    // }
+
     if (displayValue[0] === '*' || displayValue[0] === '/') {
         console.log('invalid: first operator is * or /');
+        return false;
+    } else if (operators.length === 0) {
+        console.log('invalid: no operators');
         return false;
     } else if (operators[operators.length - 1] === displayValue[displayValue.length - 1]) {
         console.log('invalid: last input is an operator');
         return false;
-    } else if (isDoubleOperators()){
+    } else if (isDoubleOperators()) {
         console.log('invalid: consecutive operators');
         return false;
     } else {
@@ -194,6 +227,14 @@ function compute() {
         // Check divition by zero
         if (operator === '/' && b === '0') {
             return alert('ERROR: You can\'t divide by 0');
+        }
+
+        // Check more than one dot
+        if (a.includes('.') && isMoreThanOneDot(a)) {
+            return alert('ERROR: You can\'t have more than one dot');
+        }
+        if (b.includes('.') && isMoreThanOneDot(b)) {
+            return alert('ERROR: You can\'t have more than one dot');
         }
 
         resultValue = operate(operator, a, b);
