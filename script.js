@@ -3,6 +3,7 @@ let displayValue = '0';
 display();
 let operatorIndices;
 let operators;
+let keyNames = [];
 
 // Math functions
 function add(a, b) {
@@ -73,6 +74,8 @@ function isInt(num) {
 
 // Button click
 function buttonClicked() {
+    console.log(this.value);
+    playSound();
     switch (this.value) {
         case 'clear':
             console.log('clear clicked');
@@ -96,6 +99,62 @@ function buttonClicked() {
                 }
             } else {
                 displayValue += this.value;
+            }
+
+            return display();
+    }
+}
+
+function keyPressed(e) {
+    // console.log(e.key + ' pressed');
+    
+    if (keyNames.includes(e.key)) {
+        // console.log('hell yeah!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+        const key = document.querySelector(`button[id="${e.key}"`);
+        // console.log(key.value);
+        buttonClicked2(key.value);
+        playSound();
+    }
+    // if (e.key)
+    // const key = document.querySelector(`button[data-key="${e.keyCode}"]`);
+    // console.log(key.value);
+
+    
+    
+    // if (this.value === )
+}
+
+function playSound() {
+    const audio = document.querySelector('audio');
+    audio.currentTime = 0;
+    audio.play();
+}
+
+function buttonClicked2(keyvalue) {
+    console.log(keyvalue);
+    switch (keyvalue) {
+        case 'clear':
+            console.log('clear clicked');
+            displayValue = '0';
+            return display();
+        case 'undo':
+            console.log('undo clicked');
+            displayValue = displayValue.slice(0, displayValue.length - 1);
+            return display();
+        case '=':
+            console.log('= clicked');
+            return compute();
+        default:
+            console.log('number and symbols clicked' + keyvalue);
+
+            if (displayValue === '0') {
+                if (keyvalue === '.') {
+                    displayValue += keyvalue;
+                } else {
+                    displayValue = keyvalue;
+                }
+            } else {
+                displayValue += keyvalue;
             }
 
             return display();
@@ -156,8 +215,9 @@ function evaluateOperators(input) {
     operators = [];
 
     for (i = 0; i < input.length; i++) {
+
         if (input[i] === '+' ||
-            input[i] === '-' ||
+            (input[i] === '-' && i !== 0) ||
             input[i] === '*' ||
             input[i] === '/') {
             operatorIndices.push(i);
@@ -186,7 +246,7 @@ function compute() {
     // Loop while all operators are computed
     // while (operatorIndices.length !== 0)
     // while (isNaN(input)) 
-    while (operatorIndices.length !== 0) {
+    while (isNaN(input)) {
         let multiplyOperatorIndex = operators.indexOf('*');
         let divideOperatorIndex = operators.indexOf('/');
 
@@ -255,8 +315,29 @@ function compute() {
     display();
 }
 
+function changeButtonColor(button) {
+    if (button.value === 'clear' || button.value === 'undo') {
+        button.style.backgroundColor = '#525252';
+    } else if (button.value === '+' ||
+        button.value === '-' ||
+        button.value === '*' ||
+        button.value === '/' ||
+        button.value === '=') {
+            button.style.backgroundColor = '#ff6f00';
+    } else {
+        button.style.backgroundColor = '#a3a3a3';
+    }
+}
+function createButtonNames(button) {
+    keyNames.push(button.id);
+}
+
 // Event listener for button click
 const buttons = document.querySelectorAll('button');
 buttons.forEach(button => {
     button.addEventListener('click', buttonClicked);
+    changeButtonColor(button);
+    createButtonNames(button);
 });
+
+window.addEventListener('keydown', keyPressed);
