@@ -75,8 +75,12 @@ function isInt(num) {
 function buttonClicked() {
     switch (this.value) {
         case 'clear':
-            console.log('clear clicked')
+            console.log('clear clicked');
             displayValue = '0';
+            return display();
+        case 'undo':
+            console.log('undo clicked');
+            displayValue = displayValue.slice(0, displayValue.length - 1);
             return display();
         case '=':
             console.log('= clicked');

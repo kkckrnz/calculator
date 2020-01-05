@@ -6,13 +6,16 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Calculator</h1>
+    <!-- <h1></h1> -->
     <div id="container">
         <div class="row">
-            <p id="display"></p>
+            <div id='display-container'>
+                <p id="display"></p>
+            </div>
         </div>
         <div class="row">
-            <button class="double" value="clear">Clear</button>
+            <button class="single" value="clear">Clear</button>
+            <button class="single" value="undo">←</button>
             <button class="double" value="=">=</button>
         </div>
         <div class="row">
@@ -42,5 +45,6 @@
     </div>
 
     <script src="script.js"></script>
+    <script src="style.js"></script>
 </body>
 </html>
